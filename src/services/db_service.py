@@ -28,8 +28,8 @@ class DBConnection:
             host=getenv('DB_HOST'),
             user=getenv('DB_USER'),
             password=getenv('DB_PASSWORD'),
-            port=getenv('DB_PORT'),
-            dbname=getenv('DB_NAME')
+            port=int(getenv('DB_PORT')),  # Convert port to integer
+            dbname=getenv('DB_NAME')  # Match the correct env variable name
         )
 
     def get_connection(self):
