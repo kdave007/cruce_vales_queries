@@ -2,15 +2,48 @@ from src.services.db_service import DBConnection
 
 class Query1:
     def __init__(self):
-        self.query_name = "Query 1"
+        self.query_name = "Query_1"
         self.db = DBConnection()
 
     def validate_params(self, dateRange, locations, limit):
         """
         Validate the parameters before executing the query
+        Args:
+            dateRange (dict): Dictionary with 'start' and 'end' dates in YYYYMMDD format
+            locations (list): List of location codes
+            limit (int): Query limit (optional)
+        Returns:
+            bool: True if parameters are valid
         """
-        # Add your validation logic here
-        return True
+        try:
+            # Check if dateRange is a dictionary and has required keys
+            if not isinstance(dateRange, dict) or 'start' not in dateRange or 'end' not in dateRange:
+                print("Error: dateRange debe ser un diccionario con claves 'start' y 'end'")
+                return False
+
+            # Check if dates are not empty and in correct format
+            start_date = str(dateRange['start'])
+            end_date = str(dateRange['end'])
+            
+            if not (start_date.isdigit() and end_date.isdigit() and len(start_date) == 8 and len(end_date) == 8):
+                print("Error: las fechas deben estar en formato YYYYMMDD")
+                return False
+
+            # Validate date range
+            if int(start_date) > int(end_date):
+                print("Error: la fecha de inicio no puede ser posterior a la fecha de fin")
+                return False
+
+            # Check if locations is a non-empty list
+            if not isinstance(locations, list) or not locations:
+                print("Error: locations debe ser una lista no vacia")
+                return False
+
+            return True
+
+        except Exception as e:
+            print(f"Error validating parameters: {e}")
+            return False
         
     def execute(self, dateRange, locations, limit):
         """
