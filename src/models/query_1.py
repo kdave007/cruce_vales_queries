@@ -2,28 +2,43 @@ from src.services.db_service import DBConnection
 
 class Query1:
     def __init__(self):
-        self.query_name = "Query_1"
+        self.query_name = "query_1"
         self.db = DBConnection()
 
-    def validate_params(self, dateRange, locations, limit):
+    def get_required_params(self):
+        """Return the parameters required for this query"""
+        return {
+            'date_range': 'Dictionary with start and end dates in YYYYMMDD format',
+            'locations': 'List of location codes'
+        }
+
+    def validate_params(self, params):
         """
         Validate the parameters before executing the query
         Args:
-            dateRange (dict): Dictionary with 'start' and 'end' dates in YYYYMMDD format
-            locations (list): List of location codes
-            limit (int): Query limit (optional)
+            params (dict): Dictionary containing:
+                - date_range (dict): with 'start' and 'end' dates
+                - locations (list): list of location codes
         Returns:
             bool: True if parameters are valid
         """
         try:
-            # Check if dateRange is a dictionary and has required keys
-            if not isinstance(dateRange, dict) or 'start' not in dateRange or 'end' not in dateRange:
+            # Check required parameters
+            if 'date_range' not in params or 'locations' not in params:
+                print("Error: Se requieren los parámetros 'date_range' y 'locations'")
+                return False
+
+            date_range = params['date_range']
+            locations = params['locations']
+
+            # Check if date_range is a dictionary and has required keys
+            if not isinstance(date_range, dict) or 'start' not in date_range or 'end' not in date_range:
                 print("Error: dateRange debe ser un diccionario con claves 'start' y 'end'")
                 return False
 
             # Check if dates are not empty and in correct format
-            start_date = str(dateRange['start'])
-            end_date = str(dateRange['end'])
+            start_date = str(date_range['start'])
+            end_date = str(date_range['end'])
             
             if not (start_date.isdigit() and end_date.isdigit() and len(start_date) == 8 and len(end_date) == 8):
                 print("Error: las fechas deben estar en formato YYYYMMDD")
@@ -45,13 +60,15 @@ class Query1:
             print(f"Error validating parameters: {e}")
             return False
         
-    def execute(self, dateRange, locations, limit):
+    def execute(self, params):
+        date_range = params['date_range']
+        locations = params['locations']
+        print(date_range)
         """
         execute query
         """
         try:
             with self.db.cursor() as cursor:
-                # Your SQL query here with parameters
                 query = """
                 SELECT 
                     CASE 
@@ -106,7 +123,7 @@ class Query1:
                     v.estado, tipo, descripcion, articulo, prod_desc, folio_alta, fechacort;
                 """.format(','.join(['%s'] * len(locations)))
                 
-                params = [dateRange['start'], dateRange['end']] + locations
+                params = [date_range['start'], date_range['end']] + locations
                 cursor.execute(query, params)
                 return cursor.fetchall()
                 

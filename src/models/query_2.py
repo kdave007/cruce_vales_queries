@@ -2,7 +2,7 @@ from src.services.db_service import DBConnection
 
 class Query2:
     def __init__(self):
-        self.query_name = "Query_2"
+        self.query_name = "query_2"
         self.db = DBConnection()
 
     def validate_params(self, dateRange, locations, limit):

@@ -1,3 +1,11 @@
+import sys
+from pathlib import Path
+
+# Add the project root directory to Python path
+project_root = str(Path(__file__).parent)
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
 from src.controllers.query_controller import QueryController
 from src.services.db_service import DBConnection
 
@@ -5,7 +13,7 @@ from src.services.db_service import DBConnection
 def testDBconnection():
     try:
         db = DBConnection()
-        with db.cursor() as cursor:  # Fix: cursor is a method, not a property
+        with db.cursor() as cursor:
             cursor.execute("SELECT 1")
             result = cursor.fetchone()
             print("✓ Conexión a base de datos exitosa")
@@ -15,10 +23,33 @@ def testDBconnection():
         return False
 
 def test():
-    testDBconnection()
     qc = QueryController()
-    # qc.execute_query("query_2",None)
+    
+    # Test parameters for Query1
+    test_params = {
+        'date_range': {
+            'start': '20250301',
+            'end': '20250331'
+        },
+        'locations': ['BAJAC', 'GUADA']
+    }
+    
+    results = qc.execute_query("query_test", test_params)
+
+    if results is not None:
+        print(f"✓ Query1 ejecutada exitosamente")
+        print(f"  Registros encontrados: {len(results)}")
+        if len(results) > 0:
+            print("  Primer registro:")
+            for key, value in results[0].items():
+                print(f"    {key}: {value}")
+        return True
+    else:
+        print("✗ Query1 no retornó resultados")
+        return False
+
 
 if __name__ == "__main__":
     print("\n1. Probando conexión a base de datos:")
     testDBconnection()
+    test()

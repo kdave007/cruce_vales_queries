@@ -1,15 +1,17 @@
 # src/controllers/query_controller.py
 
-from src.models.query_1 import Query1
-from src.models.query_2 import Query2
-from src.models.query_3 import Query3
+from ..models.query_1 import Query1
+from ..models.query_2 import Query2
+from ..models.query_3 import Query3
+from ..models.query_test import Query_Test
 
 class QueryController:
     def __init__(self):
         self.queries = {
             'query_1': Query1(),
             'query_2': Query2(),
-            'query_3': Query3()
+            'query_3': Query3(),
+            'query_test': Query_Test()
         }
 
     def execute_query(self, query_name, params):
@@ -33,14 +35,15 @@ class QueryController:
             query = self.queries[query_name]
             
             # Validate parameters - each query model handles its own validation
-            if not query.validate_params(params):
-                return None
+           # if not query.validate_params(params):
+            #   return None
 
             # Execute query and return results
             return query.execute(params)
+            
 
         except Exception as e:
-            print(f"Error executing query: {e}")
+            print(f" controller Error executing query: {e}")
             return None
 
     def get_available_queries(self):
