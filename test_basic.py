@@ -40,9 +40,12 @@ def test():
         print(f"✓ Query1 ejecutada exitosamente")
         print(f"  Registros encontrados: {len(results)}")
         if len(results) > 0:
-            print("  Primer registro:")
-            for key, value in results[0].items():
-                print(f"    {key}: {value}")
+          
+            for element in results:
+                print(" ---------------------")
+                for key, value in element.items():
+                  
+                   print(f"  --  {key}: {value}")
         return True
     else:
         print("✗ Query1 no retornó resultados")
