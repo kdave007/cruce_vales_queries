@@ -35,8 +35,8 @@ class QueryController:
             query = self.queries[query_name]
             
             # Validate parameters - each query model handles its own validation
-           # if not query.validate_params(params):
-            #   return None
+            if not query.validate_params(params):
+               return None
 
             # Execute query and return results
             return query.execute(params)

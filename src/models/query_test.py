@@ -4,6 +4,9 @@ class Query_Test:
     def __init__(self):
         self.query_name = "query_test"
         self.db = DBConnection()
+
+    def validate_params(self, params):
+        return True    
         
     def execute(self,params):
         """
