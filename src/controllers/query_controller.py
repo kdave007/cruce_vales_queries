@@ -53,7 +53,7 @@ class QueryController:
                         'headers': headers
                     }
             
-            print("✗ La query no retornó resultados")
+            print("✗ La consulta no retornó resultados")
             return None
 
         except Exception as e:
