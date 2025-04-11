@@ -104,3 +104,16 @@ class Query3:
         except Exception as e:
             print(f"Error executing query: {e}")
             raise
+
+    def fetch_headers(self, data):
+        """
+        execute query
+        """            
+        if data is not None:
+            print(f"  Registros encontrados: {len(data)}")
+            if len(data) > 0:
+                headers = list(data[0].keys())
+            return headers
+        else:
+            print("✗ Error fetching headers")
+            return False    

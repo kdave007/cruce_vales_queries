@@ -38,14 +38,19 @@ def test():
 
     if results is not None:
         print(f"✓ Query1 ejecutada exitosamente")
-        print(f"  Registros encontrados: {len(results)}")
-        if len(results) > 0:
+        print(f"  Registros encontrados: {len(results['data'])}")
+        if len(results['data']) > 0:
           
-            for element in results:
+            for element in results['data']:
                 print(" ---------------------")
                 for key, value in element.items():
-                  
-                   print(f"  --  {key}: {value}")
+                    print(f"  --  {key}: {value}")
+                    
+            # Print headers too
+            print("\nHeaders:")
+            for header in results['headers']:
+                print(f"  - {header}")
+                
         return True
     else:
         print("✗ Query1 no retornó resultados")

@@ -26,6 +26,9 @@ class QueryController:
                 Query specific parameters:
                 - secondary_locations: list of secondary locations (for query 2)
                 - extra_params: any additional parameters needed
+        Returns:
+            dict: Contains 'data' and 'headers' if successful
+            None: If query fails or returns no results
         """
         try:
             if query_name not in self.queries:
@@ -34,16 +37,27 @@ class QueryController:
 
             query = self.queries[query_name]
             
-            # Validate parameters - each query model handles its own validation
+            # Validate parameters
             if not query.validate_params(params):
-               return None
+                return None
 
-            # Execute query and return results
-            return query.execute(params)
+            # Execute query
+            results = query.execute(params)
             
+            if results and len(results) > 0:
+                # Get headers for the results
+                headers = query.fetch_headers(results)
+                if headers:
+                    return {
+                        'data': results,
+                        'headers': headers
+                    }
+            
+            print("✗ La query no retornó resultados")
+            return None
 
         except Exception as e:
-            print(f" controller Error executing query: {e}")
+            print(f"Error executing query: {e}")
             return None
 
     def get_available_queries(self):

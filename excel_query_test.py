@@ -1,5 +1,6 @@
 import sys
 import os
+from datetime import datetime
 
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -46,25 +47,24 @@ def test_excel_generation():
         print(f"✓ Query ejecutada exitosamente, generando Excel...")
         print(f"  Registros encontrados: {len(results)}")
         
-        # Create Excel service
-        excel = ExcelService("query_results.xlsx")
+        # Create Excel service with datetime in filename
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"Prueba_{current_time}"
+        excel = ExcelService(file_name + ".xlsx")
 
         # Create a new sheet
         sheet = excel.create_sheet("Query Test")
 
-        # Get headers from results
-        headers = list(results[0].keys())
-
         # Write headers and data
-        excel.write_headers(sheet, headers)
-        excel.write_data(sheet, results)
+        excel.write_headers(sheet, results['headers'])
+        excel.write_data(sheet, results['data'])
 
         # Save the file
         excel.save()
         print("✓ Archivo Excel generado exitosamente: query_results.xlsx")
         return True
     else:
-        print("✗ La query no retornó resultados")
+        print("✗ La consulta no retornó resultados")
         return False
 
 if __name__ == "__main__":
