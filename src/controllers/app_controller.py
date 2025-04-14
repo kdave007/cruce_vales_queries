@@ -76,11 +76,10 @@ class AppController:
                 print(f"\n[{completed + 1}/{total_queries}] Ejecutando {query_name}...")
 
                 try:
-                    #HARDCOE test to debug---------------------------------------
-                    debug_query = 'query_test'
-                    results[query_name] = self.query_exe(debug_query, params)
+                  
+                   # results[query_name] = self.query_exe(debug_query, params)
 
-                    #results[query_name] = self.query_exe(query_name, params)
+                    results[query_name] = self.query_exe(query_name, params)
                     end_time = datetime.now()
                     duration = (end_time - start_time).total_seconds()
 
@@ -102,7 +101,10 @@ class AppController:
         """
         executes a single query and returns results
         """   
+        #DEBUG PURPOSES HERE ---------------------------------------
+        query_name = "query_test"
         print(f"\nEjecutando {query_name}...")
+
         return self.query_controller.execute_query(query_name, params)
 
     def generate_excel(self, results):
