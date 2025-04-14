@@ -28,13 +28,14 @@ def test():
     # Test parameters for Query1
     test_params = {
         'date_range': {
-            'start': '20250301',
-            'end': '20250331'
+            'start': '20240101',
+            'end': '20240131'
         },
         'locations': ['BAJAC', 'GUADA']
     }
     
     results = qc.execute_query("query_test", test_params)
+    print(results)
 
     if results is not None:
         print(f"✓ Query1 ejecutada exitosamente")

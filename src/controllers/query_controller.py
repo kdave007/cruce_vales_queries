@@ -43,6 +43,7 @@ class QueryController:
 
             # Execute query
             results = query.execute(params)
+            print(results)
             
             if results and len(results) > 0:
                 # Get headers for the results
