@@ -78,7 +78,7 @@ class AppController:
                 try:
                     #HARDCOE test to debug---------------------------------------
                     debug_query = 'query_test'
-                    results[debug_query] = self.query_exe(debug_query, params)
+                    results[query_name] = self.query_exe(debug_query, params)
 
                     #results[query_name] = self.query_exe(query_name, params)
                     end_time = datetime.now()
@@ -110,14 +110,19 @@ class AppController:
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             file_name = f"Reporte_{current_time}"
             excel = ExcelService(file_name + ".xlsx")
+            sheets = {}
 
             # Process each query result
+            print("chackpoint")
             for idx, (query_name, query_result) in enumerate(results.items(), 1):
+                
                 if query_result and query_result.get('data'):  # Only create sheet if we have data
                     print(f"[{idx}/{len(results)}] Generando hoja para {query_name}...")
                     
-                    # Create sheet with simple name
-                    sheet = excel.create_sheet(f"Query_{idx}")
+                    # Create sheet with query name
+                    sheet = excel.create_sheet(query_name)
+                
+                    print(f"{idx} ---------- idx")
 
                     headers = query_result.get('headers', [])
                     data = query_result.get('data', [])
@@ -130,6 +135,7 @@ class AppController:
             try:
                 excel.save()
                 print(f"✓ Archivo generado: {file_name}.xlsx")
+                print(f"Hojas creadas: {', '.join(sheets.keys())}")
             except Exception as e:
                 print(f"✗ Error generando Excel: {str(e)}")
 
