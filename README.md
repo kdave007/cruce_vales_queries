@@ -34,10 +34,16 @@ DB_PORT=5432
      QUERY_DATE_START=20240101    # Start date in YYYYMMDD format
      QUERY_DATE_END=20240131      # End date in YYYYMMDD format
      QUERY_LOCATIONS=LOC1,LOC2    # Comma-separated list of locations
+     FILE_NAME=My_Report_Name      # Excel file name (optional, defaults to 'Reporte')
      ```
+   Notes:
+   - If FILE_NAME is not set, files will be named `Reporte_YYYYMMDD_HHMMSS.xlsx`
+   - Invalid filename characters will be replaced with underscores
+   - Leading/trailing spaces and dots are removed
+   - Empty filenames will default to 'Reporte'
 
 3. Excel Output:
-   - Reports are generated with timestamp names (e.g., `Reporte_20250414_161347.xlsx`)
+   - Reports are generated with timestamp names (e.g., `{FILE_NAME}_{timestamp}.xlsx`)
    - Each query result is saved in a separate sheet
    - Headers are formatted with bold text and colored background
 
