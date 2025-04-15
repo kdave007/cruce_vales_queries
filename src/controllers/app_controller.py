@@ -41,24 +41,54 @@ class AppController:
         """Get parameters from user input"""
         print("\n=== Configuración de Parámetros ===")
         
-        # Get date range
-        print("\nIngrese el rango de fechas (formato: YYYYMMDD)")
-        start_date = input("Fecha inicial: ")
-        end_date = input("Fecha final: ")
-        
-        # Get locations
-        print("\nIngrese las ubicaciones (separadas por coma)")
-        print("Ejemplo: BAJAC,GUADA")
-        locations_input = input("Ubicaciones: ")
-        locations = [loc.strip() for loc in locations_input.split(',')]
-        
-        return {
-            'date_range': {
-                'start': start_date,
-                'end': end_date
-            },
-            'locations': locations
-        } 
+        while True:
+            try:
+                # Get date range
+                print("\nIngrese el rango de fechas (formato: YYYYMMDD)")
+                start_date = input("Fecha inicial: ")
+                end_date = input("Fecha final: ")
+                
+                # Validate date format
+                if not (len(start_date) == 8 and len(end_date) == 8 and 
+                       start_date.isdigit() and end_date.isdigit()):
+                    raise ValueError("Las fechas deben tener formato YYYYMMDD y ser números")
+                
+                # Convert to int to validate ranges
+                year_start = int(start_date[:4])
+                month_start = int(start_date[4:6])
+                day_start = int(start_date[6:])
+                
+                year_end = int(end_date[:4])
+                month_end = int(end_date[4:6])
+                day_end = int(end_date[6:])
+                
+                # Basic date validation
+                if not (2000 <= year_start <= 2100 and 2000 <= year_end <= 2100):
+                    raise ValueError("El año debe estar entre 2000 y 2100")
+                if not (1 <= month_start <= 12 and 1 <= month_end <= 12):
+                    raise ValueError("El mes debe estar entre 01 y 12")
+                if not (1 <= day_start <= 31 and 1 <= day_end <= 31):
+                    raise ValueError("El día debe estar entre 01 y 31")
+                
+                # Get locations
+                print("\nIngrese las ubicaciones (separadas por coma)")
+                print("Ejemplo: BAJAC,GUADA")
+                locations_input = input("Ubicaciones: ")
+                locations = [loc.strip() for loc in locations_input.split(',') if loc.strip()]
+                
+                if not locations:
+                    raise ValueError("Debe ingresar al menos una ubicación")
+                
+                return {
+                    'date_range': {
+                        'start': start_date,
+                        'end': end_date
+                    },
+                    'locations': locations
+                }
+            except ValueError as e:
+                print(f"\n✗ Error: {str(e)}")
+                print("Por favor intente nuevamente.")
 
     def execute_all(self, params):
         """Execute all queries"""
