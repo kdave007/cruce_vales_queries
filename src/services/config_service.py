@@ -24,13 +24,35 @@ class ConfigService:
         # Parse locations from comma-separated string
         locations_str = os.getenv('QUERY_LOCATIONS', '')
         
+        # Get and sanitize file name
+        file_name = self._sanitize_filename(os.getenv('FILE_NAME', 'Reporte'))
+        
         self.query_params = {
             'date_range': {
                 'start': os.getenv('QUERY_DATE_START'),
                 'end': os.getenv('QUERY_DATE_END')
             },
-            'locations': [loc.strip() for loc in locations_str.split(',') if loc.strip()]
+            'locations': [loc.strip() for loc in locations_str.split(',') if loc.strip()],
+            'file_name': file_name
         }
+
+    def _sanitize_filename(self, filename):
+        """
+        Sanitize filename by removing invalid characters
+        """
+        # Replace invalid characters with underscore
+        invalid_chars = '<>:"/\\|?*'
+        for char in invalid_chars:
+            filename = filename.replace(char, '_')
+        
+        # Remove control characters
+        filename = "".join(char for char in filename if ord(char) >= 32)
+        
+        # Trim spaces and dots from ends
+        filename = filename.strip(". ")
+        
+        # If empty after sanitizing, return default
+        return filename if filename else "Reporte"
 
     def get_query_params(self):
         """Get query parameters"""
