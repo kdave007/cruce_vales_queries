@@ -27,13 +27,17 @@ class ConfigService:
         # Get and sanitize file name
         file_name = self._sanitize_filename(os.getenv('FILE_NAME', 'Reporte'))
         
+        # Get test mode (default to 'on')
+        test_mode = os.getenv('TEST_MODE', 'on').lower()
+        
         self.query_params = {
             'date_range': {
                 'start': os.getenv('QUERY_DATE_START'),
                 'end': os.getenv('QUERY_DATE_END')
             },
             'locations': [loc.strip() for loc in locations_str.split(',') if loc.strip()],
-            'file_name': file_name
+            'file_name': file_name,
+            'test_mode': test_mode == 'on'  # Convert to boolean
         }
 
     def _sanitize_filename(self, filename):

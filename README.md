@@ -35,6 +35,7 @@ DB_PORT=5432
      QUERY_DATE_END=20240131      # End date in YYYYMMDD format
      QUERY_LOCATIONS=LOC1,LOC2    # Comma-separated list of locations
      FILE_NAME=My_Report_Name      # Excel file name (optional, defaults to 'Reporte')
+     TEST_MODE=on                  # Test mode (optional, defaults to 'on')
      ```
    Notes:
    - If FILE_NAME is not set, files will be named `Reporte_YYYYMMDD_HHMMSS.xlsx`
@@ -56,7 +57,7 @@ python test_completed.py
 
 The tool will:
 1. Connect to the database using credentials from `credentials.secure.env`
-2. Execute selected queries
+2. Execute selected queries (test or production based on TEST_MODE)
 3. Generate Excel reports with results
 
 ### Available Options:
