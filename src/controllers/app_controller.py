@@ -132,29 +132,32 @@ class AppController:
         executes a single query and returns results
         """   
         #DEBUG PURPOSES HERE ---------------------------------------
-        query_name = "query_test"
-        print(f"\nEjecutando {query_name}...")
-
+        if self.config_service.get_query_params()['test_mode']:  
+            query_name = "query_test"
+            print(f"\nEjecutando con bandera activada de prueba {query_name}...")
+        
         return self.query_controller.execute_query(query_name, params)
 
     def generate_excel(self, results):
         """ generate excel """
+        if not results:
+            print("✗ No hay resultados para generar el archivo Excel")
+            return
+
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{self.config_service.get_query_params().get('file_name', 'Reporte')}_{current_time}"
         excel = ExcelService(file_name + ".xlsx")
         sheets = {}
+        no_data_queries = []
 
         # Process each query result
-        print("chackpoint")
         for idx, (query_name, query_result) in enumerate(results.items(), 1):
-            
             if query_result and query_result.get('data'):  # Only create sheet if we have data
                 print(f"[{idx}/{len(results)}] Generando hoja para {query_name}...")
                 
                 # Create sheet with query name
                 sheet = excel.create_sheet(query_name)
-            
-                print(f"{idx} ---------- idx")
+                sheets[query_name] = sheet
 
                 headers = query_result.get('headers', [])
                 data = query_result.get('data', [])
@@ -162,14 +165,22 @@ class AppController:
                 if headers and data:
                     excel.write_headers(sheet, headers)
                     excel.write_data(sheet, data)
+            else:
+                no_data_queries.append(query_name)
         
-        # Save the workbook
-        try:
-            excel.save()
-            print(f"✓ Archivo generado: {file_name}.xlsx")
-            print(f"Hojas creadas: {', '.join(sheets.keys())}")
-        except Exception as e:
-            print(f"✗ Error generando Excel: {str(e)}")
+        # Only save if we have at least one sheet with data
+        if sheets:
+            try:
+                excel.save()
+                print(f"✓ Archivo generado: {file_name}.xlsx")
+                print(f"Hojas creadas: {', '.join(sheets.keys())}")
+                if no_data_queries:
+                    print(f"✗ Queries sin resultados: {', '.join(no_data_queries)}")
+            except Exception as e:
+                print(f"✗ Error generando Excel: {str(e)}")
+        else:
+            print("✗ No hay datos para generar el archivo Excel")
+            print(f"✗ Queries sin resultados: {', '.join(no_data_queries)}")
 
     def run(self):
         """Main execution flow"""
